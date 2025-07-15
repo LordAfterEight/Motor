@@ -30,7 +30,7 @@ macro_rules! new_entity {
             };
             $(
                 #[cfg(debug_assertions)]
-                debug!("  - {:?}", $module);
+                $crate::debug!("  - {:?}", $module);
                 new_entity.add_module($module);
             )*
             new_entity
