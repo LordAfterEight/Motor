@@ -2,7 +2,7 @@ pub use log::debug;
 pub use macroquad::color;
 pub use macroquad::input;
 pub use macroquad::prelude;
-pub use macroquad::main;
+pub use macroquad;
 
 /// This macro creates a new Entity with a custom (zero or more) amount of Modules
 #[macro_export]
@@ -10,7 +10,7 @@ macro_rules! new_entity {
     ( $name:tt ) => {
         {
             #[cfg(debug_assertions)]
-            log::debug!("Created new Entity instance with name '{}'", $name);
+            $crate::debug!("Created new Entity instance with name '{}'", $name);
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
                 id: $crate::prelude::rand::rand(),
@@ -22,7 +22,7 @@ macro_rules! new_entity {
     ( $name:expr, $($module:expr), *) => {
         {
             #[cfg(debug_assertions)]
-            log::debug!("Created new Entity instance with name '{}' and module(s):", $name);
+            $crate::debug!("Created new Entity instance with name '{}' and module(s):", $name);
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
                 id: $crate::prelude::rand::rand(),
