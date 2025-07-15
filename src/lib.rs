@@ -1,5 +1,5 @@
-use macroquad::{color, prelude::*};
-use log;
+pub use log::debug;
+pub use macroquad::color;
 pub use macroquad::input;
 pub use macroquad::prelude;
 pub use macroquad::main;
@@ -13,7 +13,7 @@ macro_rules! new_entity {
             log::debug!("Created new Entity instance with name '{}'", $name);
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
-                id: $crate::rand::rand(),
+                id: $crate::prelude::rand::rand(),
                 modules: None
             };
             new_entity
@@ -25,7 +25,7 @@ macro_rules! new_entity {
             log::debug!("Created new Entity instance with name '{}' and module(s):", $name);
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
-                id: $crate::rand::rand(),
+                id: $crate::prelude::rand::rand(),
                 modules: Some(Vec::new())
             };
             $(
@@ -49,13 +49,13 @@ pub struct Vector2D {
 /// Provides an image texture loaded from a file. Use this in ```Module::Texture()```
 #[derive(Debug)]
 pub struct Texture {
-    pub texture: Texture2D
+    pub texture: macroquad::prelude::Texture2D
 }
 
 impl Texture {
     pub async fn load(path: &str) -> Self {
         Self {
-            texture: load_texture(path).await.expect("Failed to load texture")
+            texture: prelude::load_texture(path).await.expect("Failed to load texture")
         }
     }
 }
@@ -63,7 +63,7 @@ impl Texture {
 impl Default for Texture {
     fn default() -> Self {
         Self {
-            texture: Texture2D::empty()
+            texture: macroquad::prelude::Texture2D::empty()
         }
     }
 }
@@ -119,7 +119,7 @@ impl Entity {
                     },
                     Module::Sprite(sprite) => {
                         let (mut pos_x, mut pos_y) = (0.0,0.0);
-                        draw_texture(&sprite.texture, pos_x, pos_y, color::WHITE);
+                        prelude::draw_texture(&sprite.texture, pos_x, pos_y, color::WHITE);
                     },
                     Module::Controls(controls) => {
                     }
