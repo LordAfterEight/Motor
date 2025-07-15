@@ -1,8 +1,8 @@
 use macroquad::{color, prelude::*};
-use macroquad::texture::Image;
 use log;
 pub use macroquad::input;
 pub use macroquad::prelude;
+pub use macroquad::main;
 
 /// This macro creates a new Entity with a custom (zero or more) amount of Modules
 #[macro_export]
@@ -13,7 +13,7 @@ macro_rules! new_entity {
             log::debug!("Created new Entity instance with name '{}'", $name);
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
-                id: macroquad::rand::rand(),
+                id: $crate::rand::rand(),
                 modules: None
             };
             new_entity
@@ -25,7 +25,7 @@ macro_rules! new_entity {
             log::debug!("Created new Entity instance with name '{}' and module(s):", $name);
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
-                id: macroquad::rand::rand(),
+                id: $crate::rand::rand(),
                 modules: Some(Vec::new())
             };
             $(
