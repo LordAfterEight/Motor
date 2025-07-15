@@ -55,7 +55,7 @@ pub struct Texture {
 impl Texture {
     pub async fn load(path: &str) -> Self {
         Self {
-            texture: prelude::load_texture(&format!("$PATH/src/{}",path) as &str).await.expect("Failed to load texture")
+            texture: prelude::load_texture(&format!("$CARGO_MANIFEST_PATH/{}",path) as &str).await.expect("Failed to load texture")
         }
     }
 }
