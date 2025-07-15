@@ -1,5 +1,6 @@
 use macroquad::{color, prelude::*};
 use macroquad::texture::Image;
+use log;
 pub use macroquad::input;
 pub use macroquad::prelude;
 
