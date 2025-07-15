@@ -5,7 +5,7 @@ edition = "2024"
 description = "simple and modular 2D game engine"
 keywords = ["game", "engine"]
 license-file = "LICENSE"
-documentation = "docs.rs/motor"
+documentation = "https://docs.rs/motor"
 repository = "https://github.com/LordAfterEight/Motor"
 
 
