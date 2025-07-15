@@ -2,7 +2,7 @@ pub use log::debug;
 pub use macroquad::color;
 pub use macroquad::input;
 pub use macroquad::prelude;
-pub use macroquad;
+pub use macroquad::main;
 
 /// This macro creates a new Entity with a custom (zero or more) amount of Modules
 #[macro_export]

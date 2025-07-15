@@ -390,7 +390,7 @@ dependencies = [
 
 [[package]]
 name = "motor"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "clearscreen",
  "env_logger",
