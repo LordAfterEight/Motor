@@ -1,19 +1,28 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
-pub use log::debug;
+use log::debug;
 pub use macroquad::color;
 pub use macroquad::input;
 pub use macroquad::prelude;
 pub use macroquad;
 
 /// Creates a new Entity with a custom (zero or more) amount of Modules
+///
+/// # Example
+///
+/// ```
+/// use motor::{Vector2D, Input, Texture, Module, new_entity};
+///
+/// let position = Module::Position(Vector2D::default());
+/// let controls = Module::Controls(Input::default());
+/// let sprite   = Module::Sprite(Texture::load("Path/To/File.png").await);
+///
+/// let player = new_entity!("Player", position, controls, sprite);
+/// ```
 #[macro_export]
 macro_rules! new_entity {
     ( $name:tt ) => {
         {
             #[cfg(debug_assertions)]
-            $crate::debug!("Created new Entity instance with name '{}'", $name);
+            log::debug!("Created new Entity instance with name '{}'", $name);
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
@@ -27,7 +36,7 @@ macro_rules! new_entity {
     ( $name:expr, $($module:expr), *) => {
         {
             #[cfg(debug_assertions)]
-            $crate::debug!("Created new Entity instance with name '{}' and module(s):", $name);
+            log::debug!("Created new Entity instance with name '{}' and module(s):", $name);
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
@@ -37,7 +46,7 @@ macro_rules! new_entity {
             };
             $(
                 #[cfg(debug_assertions)]
-                $crate::debug!("  - {:?}", $module);
+                log::debug!("  - {:?}", $module);
                 new_entity.add_module($module);
             )*
             new_entity
@@ -47,13 +56,27 @@ macro_rules! new_entity {
 
 
 /// Provides 2D coordinates. Use this in ```Module::Position()```
+///
+/// # Example
+/// ```
+/// use motor::Vector2D;
+///
+/// let position = Module::Position(Vector2D::default());
+/// ```
 #[derive(Default, Debug, Clone)]
 pub struct Vector2D {
     pub x: f32,
     pub y: f32
 }
 
-/// Provides an image texture loaded from a file. Use this in ```Module::Texture()```
+/// Provides an image texture loaded from a file. Use this in ```Module::Sprite()```
+///
+/// # Example
+/// ```
+/// use motor::Input;
+///
+/// let sprite = Module::Sprite(Texture::load("Path/To/File.png").await);
+/// ```
 #[derive(Debug, Clone)]
 pub struct Texture {
     pub texture: macroquad::prelude::Texture2D
@@ -75,7 +98,7 @@ impl Default for Texture {
     }
 }
 
-/// Provides keyboard and mouse input. Use this in ```Module::Controls()```
+/// Provides keyboard input to an Entity. Use this in ```Module::Controls()```
 ///
 /// # Example
 /// ```
@@ -90,7 +113,7 @@ pub struct Input {
 }
 
 impl Input {
-    pub fn update(&mut self) {
+    fn update(&mut self) {
 
         self.x_value = 0.0;
         self.y_value = 0.0;
@@ -125,10 +148,39 @@ impl Default for Input {
 
 #[derive(Debug, Clone)]
 pub enum Module {
-    /// A position module containing a ```Vector2D```. This provides coordinates to an ```Entity```
+    /// A position module containing a ```Vector2D```. This provides coordinates to an ```Entity```.
+    /// This takes a ```Vector2D```
+    ///
+    /// # Example
+    ///
+    ///```
+    /// use motor::Vector2D;
+    ///
+    /// let position = Module::Sprite(Vector2D::default());
+    /// ```
     Position(Vector2D),
-    /// A sprite module containing an image. This provides a texture to an ```Entity```
+
+    /// A sprite module containing an image. This provides a texture to an ```Entity```.
+    /// This takes a ```Texture```. Load one directly using ```Texture::load()```
+    ///
+    /// # Example
+    ///
+    ///```
+    /// use motor::Texture;
+    ///
+    /// let sprite = Module::Sprite(Texture::load("Path/To/File.png").await);
+    /// ```
     Sprite(Texture),
+
+    /// A controls module. This provides keyboard input to an ```Entity```.
+    ///
+    /// # Example
+    ///
+    ///```
+    /// use motor::Input;
+    ///
+    /// let sprite = Module::Sprite(Input::default());
+    /// ```
     Controls(Input)
 }
 
@@ -179,7 +231,6 @@ impl Entity {
                         vector2d.x += self.val1;
                         vector2d.y += self.val2;
                     },
-                    _ => {}
                 }
             }
         }
