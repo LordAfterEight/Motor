@@ -199,8 +199,6 @@ impl Entity {
 
     /// This adds a Module to the Entity
     pub fn add_module(&mut self, new_module: Module) {
-        #[cfg(debug_assertions)]
-        debug!("Added {:?} module to Entity '{}'", new_module, self.name);
         if let Some(modules) = &mut self.modules {
             modules.push(new_module);
         } else {
