@@ -76,6 +76,14 @@ pub struct Texture {
 }
 
 impl Texture {
+    /// loads a ```macroquad::texture::Texture2D``` from a file
+    ///
+    /// # Example
+    /// ```
+    /// use motor::Texture;
+    ///
+    /// let texture = Texture::load("Path/To/File.png").await;
+    /// ```
     pub async fn load(path: &str) -> Self {
         Self {
             texture: prelude::load_texture(&format!("{}",path) as &str).await.expect("Failed to load texture")
