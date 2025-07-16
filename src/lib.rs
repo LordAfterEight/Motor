@@ -1,4 +1,3 @@
-use log::debug;
 pub use macroquad::color;
 pub use macroquad::input;
 pub use macroquad::prelude;
@@ -21,8 +20,6 @@ pub use macroquad;
 macro_rules! new_entity {
     ( $name:tt ) => {
         {
-            #[cfg(debug_assertions)]
-            log::debug!("Created new Entity instance with name '{}'", $name);
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
@@ -35,8 +32,6 @@ macro_rules! new_entity {
     };
     ( $name:expr, $($module:expr), *) => {
         {
-            #[cfg(debug_assertions)]
-            log::debug!("Created new Entity instance with name '{}' and module(s):", $name);
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
@@ -45,8 +40,6 @@ macro_rules! new_entity {
                 modules: Some(Vec::new())
             };
             $(
-                #[cfg(debug_assertions)]
-                log::debug!("  - {:?}", $module);
                 new_entity.add_module($module);
             )*
             new_entity
