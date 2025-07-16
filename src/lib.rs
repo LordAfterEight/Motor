@@ -83,10 +83,10 @@ impl Default for Texture {
 ///
 /// let controls = Module::Controls(Input::default());
 /// ```
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Clone)]
 pub struct Input {
     pub x_value: f32,
-    pub y_value : f32
+    pub y_value: f32
 }
 
 impl Input {
@@ -110,6 +110,15 @@ impl Input {
         if macroquad::input::is_key_down(macroquad::input::KeyCode::D) {
             println!("D pressed");
             self.x_value =  1.0;
+        }
+    }
+}
+
+impl Default for Input {
+    fn default() -> Self {
+        Self {
+            x_value: 0.0,
+            y_value: 0.0
         }
     }
 }
