@@ -224,9 +224,9 @@ impl Entity {
     ///
     /// # Example
     ///
-    ///use motor::{Input, Vector2D, Texture, Module, new_entity}
-    ///
     /// ```
+    /// use motor::{Input, Vector2D, Texture, Module, new_entity}
+    ///
     /// let position = Module::Position(Vector2D::default());
     /// let controls = Module::Controls(Input::default());
     /// let sprite   = Module::Sprite(Texture::load("Path/To/File.png").await);
