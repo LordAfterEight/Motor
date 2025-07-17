@@ -2,6 +2,7 @@ pub use macroquad;
 pub use macroquad::window;
 pub use macroquad::input;
 pub use macroquad::color;
+pub use macroquad::main;
 pub use colored::Colorize;
 
 /// Creates a new Entity with a custom (zero or more) amount of Modules
@@ -31,7 +32,7 @@ macro_rules! new_entity {
                 modules: None
             };
             #[cfg(debug_assertions)]
-            println!("{} {} '{}'", "[i]".yellow(), "Created new Entity with name", new_entity.name.cyan());
+            println!("{} {} {} {} \"{}\"", "[i]".yellow(), "Created new", "Entity".green(), "with name", new_entity.name.cyan());
             new_entity
         }
     };
@@ -47,7 +48,7 @@ macro_rules! new_entity {
                 modules: Some(Vec::new())
             };
             #[cfg(debug_assertions)]
-            println!("{} {} '{}'", "[i]".yellow(), "Created new Entity with name", new_entity.name.cyan());
+            println!("{} {} {} {} \"{}\"", "[i]".yellow(), "Created new", "Entity".green(), "with name", new_entity.name.cyan());
             $(
                 #[cfg(debug_assertions)]
                 new_entity.add_module($module);
@@ -208,7 +209,7 @@ impl Entity {
     /// This adds a Module to the Entity
     pub fn add_module(&mut self, new_module: Module) {
         #[cfg(debug_assertions)]
-        println!("{} {} {} {:?} {} {} {}", "[i]".yellow(), "Added", "Module".green(), new_module, "to", "Entity".green(), self.name.cyan());
+        println!("{} {} {} {:?} {} {} \"{}\"", "[i]".yellow(), "Added", "Module".green(), new_module, "to", "Entity".green(), self.name.cyan());
         if let Some(modules) = &mut self.modules {
             modules.push(new_module);
         } else {
@@ -216,7 +217,35 @@ impl Entity {
         }
     }
 
+    /// Adds or overwrites an ```Entity```s value using the given identifier and value.
+    ///
+    /// This function will check automatically if a value is already present. If not, it will
+    /// add it. If the value exists, it will overwrite the value connected to the identifier
+    ///
+    /// # Example
+    ///
+    ///use motor::{Input, Vector2D, Texture, Module, new_entity}
+    ///
+    /// ```
+    /// let position = Module::Position(Vector2D::default());
+    /// let controls = Module::Controls(Input::default());
+    /// let sprite   = Module::Sprite(Texture::load("Path/To/File.png").await);
+    ///
+    /// let player = new_entity!("Player", position, control, sprite);
+    ///
+    /// // This line adds the value "Speed" to the player Entity. The Entity's
+    /// // Controls module will use this value to modulate its outputs.
+    /// player.add_value("speed", 3.0);
+    /// ```
     pub fn add_value(&mut self, id: &str, val: f32) {
+        #[cfg(debug_assertions)]
+        println!("{} Added \"{}\" with value {} to {} {}",
+            "[i]".yellow(),
+            id.magenta(),
+            val.to_string().purple(),
+            "Entity".green(),
+            self.name.cyan()
+        );
         self.vals.push((id.to_string(), val));
     }
 
@@ -248,12 +277,8 @@ impl Entity {
                                 //self.vals.push(("ctrl_y".to_string(), controls.y_value));
                             }
                         }
-                        self.val1 += controls.x_value;
-                        self.val2 -= controls.y_value;
                     }
-                    Module::Position(vector2d) => {
-                        vector2d.x += self.val1;
-                        vector2d.y += self.val2;
+                    Module::Position(_vector2d) => {
                     },
                 }
             }
