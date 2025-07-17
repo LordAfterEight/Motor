@@ -21,7 +21,7 @@ pub use colored::Colorize;
 macro_rules! new_entity {
     ( $name:tt ) => {
         {
-            pub use colored::Colorize;
+            pub use $crate::Colorize;
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
@@ -37,7 +37,7 @@ macro_rules! new_entity {
     };
     ( $name:expr, $($module:expr), *) => {
         {
-            pub use colored::Colorize;
+            pub use $crate::Colorize;
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
