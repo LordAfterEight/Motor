@@ -2,7 +2,7 @@ pub use macroquad;
 pub use macroquad::window;
 pub use macroquad::input;
 pub use macroquad::color;
-use colored::Colorize;
+pub use colored::Colorize;
 
 /// Creates a new Entity with a custom (zero or more) amount of Modules
 ///
@@ -21,7 +21,7 @@ use colored::Colorize;
 macro_rules! new_entity {
     ( $name:tt ) => {
         {
-            use colored::Colorize;
+            pub use colored::Colorize;
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
@@ -37,7 +37,7 @@ macro_rules! new_entity {
     };
     ( $name:expr, $($module:expr), *) => {
         {
-            use colored::Colorize;
+            pub use colored::Colorize;
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
