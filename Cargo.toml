@@ -1,6 +1,6 @@
 [package]
 name = "motor"
-version = "0.2.5"
+version = "0.2.6"
 edition = "2024"
 description = "simple and modular 2D game engine"
 keywords = ["game", "engine"]
@@ -11,7 +11,7 @@ repository = "https://github.com/LordAfterEight/Motor"
 
 [dependencies]
 clearscreen = "4.0.2"
-env_logger = "0.11.8"
-log = "0.4.27"
+colored = "3.0.0"
 macroquad = "0.4.14"
 rand = "0.9.1"
+rapier2d = "0.26.1"

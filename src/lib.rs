@@ -1,7 +1,8 @@
-pub use macroquad::color;
-pub use macroquad::input;
-pub use macroquad::prelude;
 pub use macroquad;
+pub use macroquad::window;
+pub use macroquad::input;
+pub use macroquad::color;
+use colored::Colorize;
 
 /// Creates a new Entity with a custom (zero or more) amount of Modules
 ///
@@ -20,26 +21,35 @@ pub use macroquad;
 macro_rules! new_entity {
     ( $name:tt ) => {
         {
+            use colored::Colorize;
             let new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
                 val2: Default::default(),
-                id: $crate::prelude::rand::rand(),
+                vals: Vec::new(),
+                id: $crate::macroquad::prelude::rand::rand(),
                 modules: None
             };
+            #[cfg(debug_assertions)]
+            println!("{} {} '{}'", "[i]".yellow(), "Created new Entity with name", new_entity.name.cyan());
             new_entity
         }
     };
     ( $name:expr, $($module:expr), *) => {
         {
+            use colored::Colorize;
             let mut new_entity = $crate::Entity {
                 name: $name.to_string(),
                 val1: Default::default(),
                 val2: Default::default(),
-                id: $crate::prelude::rand::rand(),
+                vals: Vec::new(),
+                id: $crate::macroquad::prelude::rand::rand(),
                 modules: Some(Vec::new())
             };
+            #[cfg(debug_assertions)]
+            println!("{} {} '{}'", "[i]".yellow(), "Created new Entity with name", new_entity.name.cyan());
             $(
+                #[cfg(debug_assertions)]
                 new_entity.add_module($module);
             )*
             new_entity
@@ -86,7 +96,7 @@ impl Texture {
     /// ```
     pub async fn load(path: &str) -> Self {
         Self {
-            texture: prelude::load_texture(&format!("{}",path) as &str).await.expect("Failed to load texture")
+            texture: macroquad::prelude::load_texture(&format!("{}",path) as &str).await.expect("Failed to load texture")
         }
     }
 }
@@ -119,22 +129,10 @@ impl Input {
         self.x_value = 0.0;
         self.y_value = 0.0;
 
-        if macroquad::input::is_key_down(macroquad::input::KeyCode::W) {
-            println!("W pressed");
-            self.y_value =  1.0;
-        }
-        if macroquad::input::is_key_down(macroquad::input::KeyCode::A) {
-            println!("A pressed");
-            self.x_value = -1.0;
-        }
-        if macroquad::input::is_key_down(macroquad::input::KeyCode::S) {
-            println!("S pressed");
-            self.y_value = -1.0;
-        }
-        if macroquad::input::is_key_down(macroquad::input::KeyCode::D) {
-            println!("D pressed");
-            self.x_value =  1.0;
-        }
+        if macroquad::input::is_key_down(macroquad::input::KeyCode::W) { self.y_value =  1.0; }
+        if macroquad::input::is_key_down(macroquad::input::KeyCode::A) { self.x_value = -1.0; }
+        if macroquad::input::is_key_down(macroquad::input::KeyCode::S) { self.y_value = -1.0; }
+        if macroquad::input::is_key_down(macroquad::input::KeyCode::D) { self.x_value =  1.0; }
     }
 }
 
@@ -148,6 +146,7 @@ impl Default for Input {
 }
 
 #[derive(Debug, Clone)]
+/// This contains a selection of modules that can be given to any ```Entity``` even at runtime
 pub enum Module {
     /// A position module containing a ```Vector2D```. This provides coordinates to an ```Entity```.
     /// This takes a ```Vector2D```
@@ -192,6 +191,7 @@ pub struct Entity {
     pub id: u32,
     pub val1: f32,
     pub val2: f32,
+    pub vals: Vec<(String, f32)>,
     pub modules: Option<Vec<Module>>,
 }
 
@@ -207,6 +207,8 @@ impl Entity {
 
     /// This adds a Module to the Entity
     pub fn add_module(&mut self, new_module: Module) {
+        #[cfg(debug_assertions)]
+        println!("{} {} {} {:?} {} {} {}", "[i]".yellow(), "Added", "Module".green(), new_module, "to", "Entity".green(), self.name.cyan());
         if let Some(modules) = &mut self.modules {
             modules.push(new_module);
         } else {
@@ -214,15 +216,38 @@ impl Entity {
         }
     }
 
+    pub fn add_value(&mut self, id: &str, val: f32) {
+        self.vals.push((id.to_string(), val));
+    }
+
     pub fn update(&mut self) {
         if let Some(modules) = &mut self.modules {
             for module in modules {
                 match module {
                     Module::Sprite(sprite) => {
-                        macroquad::prelude::draw_texture(&sprite.texture, self.val1, self.val2, macroquad::color::WHITE);
+                        let (mut x, mut y) = (0.0,0.0);
+                        for value in self.vals.iter_mut() {
+                            if value.0 == "ctrl_x" {
+                                x = value.1;
+                            }
+                            if value.0 == "ctrl_y" {
+                                y = value.1;
+                            }
+                        }
+                        macroquad::prelude::draw_texture(&sprite.texture, x, y, macroquad::color::WHITE);
                     }
                     Module::Controls(controls) => {
                         controls.update();
+                        for value in self.vals.iter_mut() {
+                            if value.0 == "ctrl_x" {
+                                value.1 = controls.x_value;
+                            } else if value.0 == "ctrl_y" {
+                                value.1 = controls.y_value;
+                            } else {
+                                //self.vals.push(("ctrl_x".to_string(), controls.x_value));
+                                //self.vals.push(("ctrl_y".to_string(), controls.y_value));
+                            }
+                        }
                         self.val1 += controls.x_value;
                         self.val2 -= controls.y_value;
                     }
