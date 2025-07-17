@@ -96,16 +96,27 @@ impl Texture {
     /// let texture = Texture::load("Path/To/File.png").await;
     /// ```
     pub async fn load(path: &str) -> Self {
-        Self {
-            texture: macroquad::prelude::load_texture(&format!("{}",path) as &str).await.expect("Failed to load texture")
-        }
+        let texture = match macroquad::prelude::load_texture(&format!("{}",path) as &str).await {
+            Ok(texture) => {
+                return Self { texture }
+            },
+            Err(_texture) => {
+                println!("{} {} \"./{}\"\n    {}",
+                    "[X]".red(),
+                    "Failed to load texture from".truecolor(200, 50, 0),
+                    path,
+                    "Sending empty texture instead".truecolor(200, 50, 0)
+                );
+                return Self { texture: macroquad::texture::Texture2D::empty() }
+            }
+        };
     }
 }
 
 impl Default for Texture {
     fn default() -> Self {
         Self {
-            texture: macroquad::prelude::Texture2D::empty()
+            texture: macroquad::texture::Texture2D::empty()
         }
     }
 }
