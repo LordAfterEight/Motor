@@ -395,7 +395,7 @@ dependencies = [
 
 [[package]]
 name = "motor"
-version = "0.2.12"
+version = "0.2.13"
 dependencies = [
  "clearscreen",
  "colored",

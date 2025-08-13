@@ -59,7 +59,7 @@ macro_rules! new_entity {
 }
 
 
-/// Provides 2D coordinates. Use this in ```Module::Position()```
+/// Provides 2D coordinates. Use this in `Module::Position()`
 ///
 /// # Example
 /// ```
@@ -73,7 +73,7 @@ pub struct Vector2D {
     pub y: f32
 }
 
-/// Provides an image texture loaded from a file. Use this in ```Module::Sprite()```
+/// Provides an image texture loaded from a file. Use this in `Module::Sprite()`
 ///
 /// # Example
 /// ```
@@ -87,7 +87,7 @@ pub struct Texture {
 }
 
 impl Texture {
-    /// loads a ```macroquad::texture::Texture2D``` from a file
+    /// loads a `macroquad::texture::Texture2D` from a file
     ///
     /// # Example
     /// ```
@@ -96,7 +96,7 @@ impl Texture {
     /// let texture = Texture::load("Path/To/File.png").await;
     /// ```
     pub async fn load(path: &str) -> Self {
-        let texture = match macroquad::prelude::load_texture(&format!("{}",path) as &str).await {
+        let _texture = match macroquad::prelude::load_texture(&format!("{}",path) as &str).await {
             Ok(texture) => {
                 return Self { texture }
             },
@@ -121,7 +121,7 @@ impl Default for Texture {
     }
 }
 
-/// Provides keyboard input to an Entity. Use this in ```Module::Controls()```
+/// Provides keyboard input to an Entity. Use this in `Module::Controls()`
 ///
 /// # Example
 /// ```
@@ -158,10 +158,10 @@ impl Default for Input {
 }
 
 #[derive(Debug, Clone)]
-/// This contains a selection of modules that can be given to any ```Entity``` even at runtime
+/// This contains a selection of modules that can be given to any `Entity` even at runtime
 pub enum Module {
-    /// A position module containing a ```Vector2D```. This provides coordinates to an ```Entity```.
-    /// This takes a ```Vector2D```
+    /// A position module containing a `Vector2D`. This provides coordinates to an `Entity`.
+    /// This takes a `Vector2D`
     ///
     /// # Example
     ///
@@ -172,8 +172,8 @@ pub enum Module {
     /// ```
     Position(Vector2D),
 
-    /// A sprite module containing an image. This provides a texture to an ```Entity```.
-    /// This takes a ```Texture```. Load one directly using ```Texture::load()```
+    /// A sprite module containing an image. This provides a texture to an `Entity`.
+    /// This takes a `Texture`. You can load one directly using `Texture::load()`
     ///
     /// # Example
     ///
@@ -184,7 +184,7 @@ pub enum Module {
     /// ```
     Sprite(Texture),
 
-    /// A controls module. This provides keyboard input to an ```Entity```.
+    /// A controls module. This provides keyboard input to an `Entity`.
     ///
     /// # Example
     ///
@@ -197,6 +197,7 @@ pub enum Module {
 }
 
 
+#[derive(Debug)]
 /// An Entity class that can have several modules
 pub struct Entity {
     pub name: String,
@@ -228,7 +229,7 @@ impl Entity {
         }
     }
 
-    /// Adds or overwrites an ```Entity```s value using the given identifier and value.
+    /// Adds or overwrites an `Entity`s value using the given identifier and value.
     ///
     /// This function will check automatically if a value is already present. If not, it will
     /// add it. If the value exists, it will overwrite the value connected to the identifier

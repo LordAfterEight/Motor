@@ -1,6 +1,6 @@
 [package]
 name = "motor"
-version = "0.2.12"
+version = "0.2.13"
 edition = "2024"
 description = "simple and modular 2D game engine"
 keywords = ["game", "engine"]
